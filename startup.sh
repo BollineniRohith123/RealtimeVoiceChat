@@ -135,8 +135,9 @@ export TORCH_HOME=$HOME/.cache/torch
 # 14. Navigate to code directory and start the server
 log "Starting the Realtime Voice Chat server..."
 cd code
-python server.py &
 
+# Start server in background
+python server.py &
 SERVER_PID=$!
 
 # 15. Wait a moment and check if server started successfully
@@ -146,13 +147,11 @@ if kill -0 $SERVER_PID 2>/dev/null; then
     log "Application should be accessible at http://localhost:8000"
 else
     log "ERROR: Server failed to start"
+    kill $OLLAMA_PID 2>/dev/null || true
     exit 1
 fi
 
-# 16. Keep the script running to maintain the services
-log "All services started. Press Ctrl+C to stop."
-
-# Function to cleanup on exit
+# 16. Setup cleanup function
 cleanup() {
     log "Shutting down services..."
     kill $SERVER_PID 2>/dev/null || true
@@ -161,9 +160,12 @@ cleanup() {
     exit 0
 }
 
-# Trap SIGINT (Ctrl+C) to cleanup
-trap cleanup SIGINT
+# 17. Trap SIGINT and SIGTERM to cleanup
+trap cleanup SIGINT SIGTERM
 
-# Keep the script running
-wait</content>
+# 18. Keep the script running and wait for background processes
+log "All services started. Press Ctrl+C to stop."
+
+# Wait for the server process (main process)
+wait $SERVER_PID</content>
 <parameter name="filePath">c:\Users\rohit\Downloads\Realtime Conversation\RealtimeVoiceChat\startup.sh
