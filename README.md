@@ -71,6 +71,14 @@ This project leverages powerful AI models, which have some requirements:
 
 ## Getting Started: Installation & Setup ⚙️
 
+**🚀 Quick Start (Ubuntu/Debian):**
+```bash
+git clone https://github.com/KoljaB/RealtimeVoiceChat.git
+cd RealtimeVoiceChat
+chmod +x setup_ubuntu.sh
+./setup_ubuntu.sh
+```
+
 **Clone the repository first:**
 
 ```bash
@@ -81,7 +89,81 @@ cd RealtimeVoiceChat
 Now, choose your adventure:
 
 <details>
-<summary><strong>🚀 Option A: Docker Installation (Recommended for Linux/GPU)</strong></summary>
+<summary><strong>🚀 Option A: Automated Ubuntu/Debian Setup (Quick Start)</strong></summary>
+
+This is the fastest way to get up and running on Ubuntu/Debian systems with a single script that handles everything automatically.
+
+**Prerequisites:**
+* Ubuntu/Debian-based Linux distribution
+* `sudo` access for installing system packages
+* Internet connection for downloading dependencies
+
+**Installation:**
+
+1. **Run the automated setup script:**
+   ```bash
+   # Make the script executable and run it
+   chmod +x setup_ubuntu.sh
+   ./setup_ubuntu.sh
+   ```
+   
+   This script will:
+   * Update system packages
+   * Install all required system dependencies (git, libsndfile1, ffmpeg, etc.)
+   * Install and configure Ollama
+   * Download the required AI model
+   * Create a Python virtual environment
+   * Install PyTorch with CUDA 12.1 support
+   * Install all Python dependencies
+   * Upgrade RealtimeTTS components
+
+2. **Start the application:**
+   After the script completes, follow the displayed instructions:
+   ```bash
+   cd code
+   source ../venv/bin/activate
+   python server.py
+   ```
+
+3. **Access the web interface:**
+   Open your browser to `http://localhost:8000`
+
+**Manual Commands (if you prefer step-by-step):**
+```bash
+# System dependencies
+apt-get update
+apt-get install -y git libsndfile1 ffmpeg portaudio19-dev python3.10-venv curl
+
+# Install Ollama
+curl -fsSL https://ollama.com/install.sh | sh
+ollama serve &
+ollama pull hf.co/bartowski/huihui-ai_Mistral-Small-24B-Instruct-2501-abliterated-GGUF:Q4_K_M
+
+# Python environment setup
+python3 -m venv venv
+source venv/bin/activate
+pip install --upgrade pip
+
+# PyTorch with CUDA support
+pip install torch==2.5.1+cu121 torchaudio==2.5.1+cu121 torchvision --index-url https://download.pytorch.org/whl/cu121
+
+# Project dependencies
+pip install -r requirements.txt
+
+# RealtimeTTS upgrades
+pip uninstall realtimetts -y
+pip install realtimetts --upgrade
+pip install git+https://github.com/KoljaB/RealtimeTTS.git
+
+# Start the server
+cd code
+python server.py
+```
+
+</details>
+
+<details>
+<summary><strong>🐳 Option B: Docker Installation (Recommended for Advanced Users)</strong></summary>
 
 This is the most straightforward method, bundling the application, dependencies, and even Ollama into manageable containers.
 
@@ -127,7 +209,7 @@ This is the most straightforward method, bundling the application, dependencies,
 </details>
 
 <details>
-<summary><strong>🛠️ Option B: Manual Installation (Windows Script / venv)</strong></summary>
+<summary><strong>🛠️ Option C: Manual Installation (Windows Script / venv)</strong></summary>
 
 This method requires managing the Python environment yourself. It offers more direct control but can be trickier, especially regarding ML dependencies.
 
